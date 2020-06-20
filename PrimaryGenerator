@@ -1,4 +1,6 @@
- // default particle kinematic
+//面源定义
+//如果未指定方向，将沿（1., 0., 0.）即 X 轴
+// default particle kinematic
   // gamma particle
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   G4String particleName;
@@ -20,3 +22,39 @@
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
  
   fParticleGun->GeneratePrimaryVertex(anEvent);
+
+//点源定义
+//各项同性
+//Maxtheta = 180
+//Co-60源：1.17/1.33 MeV；锥束的圆锥半角：21度
+// default particle kinematic
+  // gamma partical
+  G4ParticleDefinition* particleDefinition 
+    = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+  fParticleGun->SetParticleDefinition(particleDefinition);
+ 
+  // energy: Co-60 source
+  G4double Flag = G4UniformRand();
+  if(Flag<0.5){
+      fParticleGun->SetParticleEnergy(1173.2*keV);}
+  else{
+      fParticleGun->SetParticleEnergy(1332.5*keV);
+  }
+ 
+  // position
+  fParticleGun->SetParticlePosition(G4ThreeVector(0,0,-14*cm));
+ 
+  // direction
+  G4double phi = G4UniformRand()*360.*deg;                                                       
+  G4double thetaMax = G4UniformRand()*21*deg;
+  G4double mu = std::cos(thetaMax);
+  
+  G4double v1=std::sqrt(1-mu*mu)*std::cos(phi) ;
+  G4double v2=std::sqrt(1-mu*mu)*std::sin(phi) ;
+  G4double v3=mu;
+ 
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(v1,v2,v3));
+ 
+  fParticleGun->GeneratePrimaryVertex(anEvent);
+  
+
