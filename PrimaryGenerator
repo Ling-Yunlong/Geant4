@@ -1,0 +1,22 @@
+ // default particle kinematic
+  // gamma particle
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4String particleName;
+  G4ParticleDefinition* particle
+    = particleTable->FindParticle(particleName="gamma");
+  fParticleGun->SetParticleDefinition(particle);
+ 
+  // energy
+  fParticleGun->SetParticleEnergy(6.*MeV);
+ 
+  // position
+  G4double x0 = G4UniformRand()-0.5;
+  G4double y0 = G4UniformRand()-0.5;
+  G4double z0 = -0.5;
+  
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+ 
+  // direction
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+ 
+  fParticleGun->GeneratePrimaryVertex(anEvent);
